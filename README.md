@@ -52,6 +52,10 @@ SQLite
 - Determine Packet Format (KISS Method, minimal information)
 - "Ping" - ICMP Style communication verification system (Can we connect to the other node?)
 - Basic Routing APRS style Routing [Node1,Node2,Node3]/[Wide,Node10]
+  - B.A.T.M.A.N. is better!
+    - Basic BATMAN Info [Batman @ Poly.edu](https://witestlab.poly.edu/blog/batman/)
+  - >BATMAN nodes don't have to calculate the whole routes for their outgoing packets, and they don't have to know the full topology of the mesh network. In BATMAN, all nodes periodically broadcasts "hello" signals, also known as originator messages (OGM), to its neighbors. Each originator messages consists of an originator address, a sending node address and a unique sequence number. When an OGM is received, the receiving node changes the sending address to its own address and re-broadcasts the message. The sequence number is used to identify which of a pair of messages is newer. With this process, each node in the network learns its own direct neighbors, but also learns about other nodes that are not in range through a direct link but can be reached by hopping through a neighbor.
+
 - RSSI Based Logic to prefer Stonger Links (Meshy!)
 
 #### Beta:
