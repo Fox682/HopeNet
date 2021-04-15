@@ -36,27 +36,35 @@ SQLite
 - User Interface
   - Ncurses or Menu Based
 - Client/Server Modes
-  - Client only
-    - Request based
+  - Client Only
+    - Request based, does not route or relay (Small Microcontrollers)
   - Relay Only
-    - Relays Packets from one place to another (Gateway/Router)
+    - Relays Packets from one place to another (Gateway/Router) (More powerful Microcontrollers)
   - Client/Relay Hybrid
-    - Access Services on other nodes while still relaying Packets as possible (*Best mode!*)
+    - Access Services on other nodes while still relaying Packets as possible (*Best mode!* for RPi Zero)
   - BBS mode (Server)
     - Accepts Client Requests
-    - Stateless system [ClientID:Asset Request]
+    - Stateless system [Asset List & Request]
 
 #### Network Protocol Concepts
 
-#### Alpha:
 - Determine Packet Format (KISS Method, minimal information)
-- "Ping" - ICMP Style communication verification system (Can we connect to the other node?)
-- Basic Routing APRS style Routing [Node1,Node2,Node3]/[Wide,Node10]
+- Basic Routing APRS style Routing [Node1,Node2,Node3]/[Wide,Node10] (Backup/Manual Mode)
   - B.A.T.M.A.N. is better!
     - Basic BATMAN Info [Batman @ Poly.edu](https://witestlab.poly.edu/blog/batman/)
   - >BATMAN nodes don't have to calculate the whole routes for their outgoing packets, and they don't have to know the full topology of the mesh network. In BATMAN, all nodes periodically broadcasts "hello" signals, also known as originator messages (OGM), to its neighbors. Each originator messages consists of an originator address, a sending node address and a unique sequence number. When an OGM is received, the receiving node changes the sending address to its own address and re-broadcasts the message. The sequence number is used to identify which of a pair of messages is newer. With this process, each node in the network learns its own direct neighbors, but also learns about other nodes that are not in range through a direct link but can be reached by hopping through a neighbor.
+- Batman OGM will keep the routing table small for Microcontrollers 
+- Link Quality can be determined by a combination of Response (ping) and Packet Loss (PL)
+-- Basic Math needed for this
+-- eg. Link with very low response time with *some* PL may be preferred over a link that has no PL but a very high response time
+-- Stronger Links Preferred (Lower RSSI)
 
 - RSSI Based Logic to prefer Stonger Links (Meshy!)
+
+#### Alpha:
+- "Ping" - ICMP Style communication verification system (Can we connect to the other node?)
+- Network and Link Discovery
+- Basic Routing
 
 #### Beta:
 - Message Passing (Texting, SMS Style)
