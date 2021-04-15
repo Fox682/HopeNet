@@ -27,7 +27,7 @@ SQLite
 
 ### Multiple Python apps
 - Radio Interface
-  - 4-Wire SPI
+  -Wire SPI
   - Using Python3-spi
   - 1Mhz SPI speed
   - Python3-spi interface
@@ -54,23 +54,36 @@ SQLite
     - Basic BATMAN Info [Batman @ Poly.edu](https://witestlab.poly.edu/blog/batman/)
   - >BATMAN nodes don't have to calculate the whole routes for their outgoing packets, and they don't have to know the full topology of the mesh network. In BATMAN, all nodes periodically broadcasts "hello" signals, also known as originator messages (OGM), to its neighbors. Each originator messages consists of an originator address, a sending node address and a unique sequence number. When an OGM is received, the receiving node changes the sending address to its own address and re-broadcasts the message. The sequence number is used to identify which of a pair of messages is newer. With this process, each node in the network learns its own direct neighbors, but also learns about other nodes that are not in range through a direct link but can be reached by hopping through a neighbor.
 - Batman OGM will keep the routing table small for Microcontrollers 
-- Link Quality can be determined by a combination of Response (ping) and Packet Loss (PL)
--- Basic Math needed for this
--- eg. Link with very low response time with *some* PL may be preferred over a link that has no PL but a very high response time
--- Stronger Links Preferred (Lower RSSI)
-
-- RSSI Based Logic to prefer Stonger Links (Meshy!)
+- Link Quality can be determined by a combination of Response (ping), Packet Loss (PL) and RSSI.
+  - Basic Math needed for this
+  - eg. Link with very low response time with *some* PL may be preferred over a link that has no PL but a very high response time
+  - Stronger Links Preferred (Lower RSSI)
 
 #### Alpha:
-- "Ping" - ICMP Style communication verification system (Can we connect to the other node?)
-- Network and Link Discovery
+- Information gathering
+  - "Ping" - ICMP Style communication verification system (Can we connect to the other node?)
+  - Route tracing
+- Network and Link Discovery (build node list)
 - Basic Routing
+- Infrastructure to build services on top of
 
 #### Beta:
-- Message Passing (Texting, SMS Style)
-- Keyboard to Keyboard communication (PC or RPi Zero to another node)
+- Basic Service Introduction
+  - Direct Messaging (Texting)
+  - Keyboard to Keyboard communication (PC or RPi Zero to another node)
 
+#### Release Candidate
+- Services Available and functional
+  - BBS Style Services
+    - Email (indirect messaging with storage... maybe)
+    - Forum (Threaded Public Messaging)
+    - Bulletin Board Messaging 
+    - Guest Book Signing 
 
+#### Advanced
+- Future Features
+  - Voice Messages
+  - Text Only Internet Access
 
 
 
