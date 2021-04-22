@@ -1,0 +1,297 @@
+
+To Do:
+
+- Figure out BOM
+- Collect Resources
+-- Get Manual/Documentation
+---- Sparkfun has antenna info
+-- Radio Config Calculator?
+- Find Hardware 
+-- Which Radios 
+---- RFM22B (SPI Control)
+---- Replaced by RFM69HCW?
+-------- Compare!
+---- 915mhz (Legal only...)
+---- 20dbm (22B/69HCW)
+---- 30dbm (23BPW, high power)
+- Price out
+-- Find good supplier of boards
+-- RPi Zero WH x3 - 64.95
+-- RFM22B each - 5.60 x3 = 16.80 + 2.60S
+---- Ebay specials
+-- USB to SPI FT233H - 14.95 + S/H
+---- Adafruit
+
+- Wiring info
+-- hackster.io/ChrisSamuelson/
+- LoRa entry
+
+---- SMA connectors and antenna?
+---- Wire antenna usable
+
+Soldering and supplies needed:
+- Adafruit has info
+- Protoboard/Perfboard
+-- Don't go super cheap
+- Female/Female Jumper Wire
+- Header pins
+- Solder wire
+- Solder wick
+- Flux pen (no clean)
+- Check current supplies
+
+
+- Data, Programs
+-- Use SQLite3 & Python3
+-- Shove everything into the database
+---- Other Python Apps can also access
+-- Send Data to other apps that way!
+-- Can keep database in RAM!
+---- Kinda... Ram Disk needed
+---- Dump db to actual disk as needed
+---- Preserve SD Card
+-- Very lightweight DB
+
+
+
+-- Protocol Design
+---- BATMAN Style!
+---- https://witestlab.poly.edu/blog/batman/
+---- Shit is cool yo!
+---- Got documents read those
+
+- Originator massages
+-- Use these to build routes
+
+- Prefer Strong Links vs
+- Return to sender only
+
+- Link Grading Algo.
+-- Packet loss higher weighted
+-- Response Time lower rated
+-- otherwise if 
+---- N1 PL is 0% and ping is 2000ms
+---- N2 PL is 50% and ping is < 1000ms
+---- Both are equal in capability (maybe)
+
+Ranked Algo by points 8-bit value
+- PL by % 
+- Ping (unknown)
+-- can be determined by:
+---- Transmit time of PING pkt
+------- Full packet + preamble & crc
+---- Plus recovery time of radio
+---- Plus transmit time of PONG
+-- Ping packet x2 + recovery time
+---- Find packet size
+
+
+------------------------
+
+-- Packet Config
+---- See Radio documentation
+- Preamble can be short
+-- A few bytes!
+- SyncWord can be the same for all radios
+-- 1 Byte is ok
+- AddressByte is optional
+- Payload max 66 Bytes (aim is ~50)
+- CRC is 2 bytes
+
+[Preamble][SyncWord][AddressByte][Payload][CRC]
+
+- AddressByte is optional 
+-- Put Address in Payload(!)
+
+[Preamble][SyncWord][Length][Payload][CRC]
+
+[101010... 3Bytes][d204 0xCC 2Bytes][Length Byte][1 Byte Min. To 50 bytes] [CRC 2Bytes]
+
+- Overhead packet size
+50 bytes payload = 58 Bytes max.
+1 byte payload = 9 bytes min.
+- Time @ 1200bps/150Bps
+- 1 bit = 0.833ms
+- Max pkt = ~48ms
+- Min pkt = ~7.5ms
+- Min Overhead 8 Bytes = ~6.7ms
+-- Not including payload
+-- For calculating packet transit times
+
+Packets are variable in size
+- Add length byte (needed)
+-- Assume length byte counts bytes
+
+------------------------
+
+Packet types:
+[Pkt Type] = 8 bits / 1 byte
+- 0-255 types available
+
+OGM
+- Advertisement of node existence
+- Send: [Pkt. Type][Node Add.][Node Type]
+- Send Intermittently
+-- After receiving OGM an message
+---- Only if no OGM sent for >5 mins
+-- Max. Every 5 mins +/- random 30 secs + queue (adjust higher?)
+-- Max pkt size = 5 bytes to advertise
+Time (pkt+ovh)= 33.3ms + 6.7ms = ~40ms per node
+
+PING 
+- [Pkt. Type][Dest. Addr][Src. Addr]
+- Type: Ping Req. / Ping Resp.
+- Max. Pkt size for ping = 5 Bytes
+- Time (pkt+ovh)= 33.3ms + 6.7ms = ~40ms x2 (ping/pong) is ~80ms
+
+Data
+- Need Data Queue
+- Split data to multiple pkts.
+- Seq# needed (8-bit 0-255)
+- Packet type is Data Request + Type
+- [Pkt. Type][Dest.][Src.][Data Size]
+- Data Types?
+-- Short data
+-- Long data
+
+-- Max data size (255 pkts/12.4KBs/12.2sec.) and timeout (15 secs?)
+
+------------------------
+
+-- Need to approve data send requests
+-- Should not tie up the spectrum unless systems are ready
+
+Ack. Pkts. (Acknowledgment Packets)
+- Data Request TX/RX Response
+-- Data TX (Ready to Send)
+-- Data TX OK Standby (Medium busy)
+- Receiving system
+-- Data RX OK (System Ready, Go!)
+-- Data RX NOK Standby (System busy)
+-- Data RX NOK (Reject)
+
+- Data Received Verification
+-- Verify with Pkt Seq#'s received
+-- Req. Missing packet numbers
+---- Dump Duplicates
+-- Modem will verify CRCs for us
+
+------------------------
+
+Node Types:
+Automated Systems (AS)
+- Repeater (Only moves packets)
+-- RPi Pico & MCs
+- Router (TBD, multi-radio?)
+
+User Systems
+- Clients will send and receive data
+-- Text messages
+-- Kb2Kb requests
+-- Request Data from servers
+-- Tx/Rx Arbitrary Data
+- Client Repeater (Default)
+-- Sends & Requests Data
+-- Repeats packets (queued/idle)
+- Client Only (Does not repeat)
+-- Allowed?
+
+Server Systems
+- BBS Mode (stateless)
+- Internet Relay (Text Only)
+
+
+Weird Idea
+- Can data whitening be used as a form of privacy code?
+-- Possible, but no data on config of the polynomial values (emailed HopeRf)
+
+- Radio Config
+-- No duty cycle limits
+-- 1 Watt (+30dBm) max power
+-- 6dBm gain antennas max
+-- Freqs to use
+---- qsl.net/kb9mwr/projects/900mhz/900users.html
+
+
+
+
+- Lora Radios (w/breakouts?)
+-- HopeRF
+
+RFM95W
+https://www.hoperf.com/modules/lora/RFM95.html
+
+RMF23BP
+- Older radio (still SPI)
+- Non-Lora
+- High power
+
+- Radios are about $10 on ebay
+-- none with headers...
+- PiZero Ws with headers needed
+-- or solder them on
+
+SPI on RPi info
+Sigmdel.ca/michel/ha/rpi/spi_on_pi_en.html
+
+
+Py-SPIDEV
+- SPI interaction with the radios in the raw
+- Register manipulation
+- sigmdel.ca/michel/ha/rpi/dnld/draft_spidev_doc.pdf
+- Likely required for rest of the implementations
+
+python3-spi
+- On pypi
+- Pure python implementation
+- github.com/tkegan/python-spi
+- python-periphery is newer
+
+python-periphery
+- Multi-Protocol pure python implementation including SPI
+- github.com/vsergeev/python-periphery
+
+Raspi-lora
+- python library for interacting with lora radios
+- Check to see if this is already set for the RFM modems
+- kinda, do this later
+
+Circuit Python
+circuitpython.readthedocs.io/projects/blinka/en/latest/api.html
+- busio for SPI
+-- spidev and others may be simpler
+-- need more examples
+
+-------------
+
+Another option:
+- Pi Pico
+-- Good for a lot of projects!
+- RAK4200 Wisduo Breakout Board
+-- github.com/daveake/pico-tracker
+- Project on raspberrypi.org
+- Looks Good!
+
+Might be able to use this with the HopeRF Radios (with breakout) to run remote terminals.
+- Combine with PiZero for the server and wifi interface!
+- Terminal Servers on balloons too?
+
+- Pi Pico and Lora Combo is good for Telemetry
+- Pi Zero and Lora combo for MODEM!
+
+Interfacing (Python Apps)
+- Shell-in-a-Box
+-- App to DB (External)
+-- DB to Comm.
+- Find lightweight DB
+
+
+----------------------------
+
+Info:
+
+FreeDV
+- Codec2
+- Output to serial?
+-- Lora Radio
+- Create new note for LORA/Radio Project
