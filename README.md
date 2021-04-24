@@ -67,33 +67,33 @@ SQLite
 - Return to sender only
 
 - Link Grading Algo.
--- Packet loss higher weighted
--- Response Time lower rated
--- otherwise if 
----- N1 PL is 0% and ping is 2000ms
----- N2 PL is 50% and ping is < 1000ms
----- Both are equal in capability (maybe)
+  - Packet loss higher weighted
+  - Response Time lower rated
+  - otherwise if 
+    - N1 PL is 0% and ping is 2000ms
+    - N2 PL is 50% and ping is < 1000ms
+    - Both are equal in capability (maybe)
 
 Ranked Algo by points 8-bit value
 - PL by % 
 - Ping (unknown)
--- can be determined by:
----- Transmit time of PING pkt
-------- Full packet + preamble & crc
----- Plus recovery time of radio
----- Plus transmit time of PONG
--- Ping packet x2 + recovery time
----- Find packet size
+  - can be determined by:
+    - Transmit time of PING pkt
+      - Full packet + preamble & crc
+      - Plus recovery time of radio
+      - Plus transmit time of PONG
+  - Ping packet x2 + recovery time
+    - Find packet size
 
 
 ------------------------
 
--- Packet Config
----- See Radio documentation
+#### Packet Config
+  - See Radio documentation
 - Preamble can be short
--- A few bytes!
+  - A few bytes!
 - SyncWord can be the same for all radios
--- 1 Byte is ok
+  - 1 Byte is ok
 - AddressByte is optional
 - Payload max 66 Bytes (aim is ~50)
 - CRC is 2 bytes
@@ -101,26 +101,26 @@ Ranked Algo by points 8-bit value
 [Preamble][SyncWord][AddressByte][Payload][CRC]
 
 - AddressByte is optional 
--- Put Address in Payload(!)
+  - Put Address in Payload(!)
 
 [Preamble][SyncWord][Length][Payload][CRC]
 
 [101010... 3Bytes][d204 0xCC 2Bytes][Length Byte][1 Byte Min. To 50 bytes] [CRC 2Bytes]
 
-- Overhead packet size
+Overhead packet size
 50 bytes payload = 58 Bytes max.
 1 byte payload = 9 bytes min.
-- Time @ 1200bps/150Bps
-- 1 bit = 0.833ms
-- Max pkt = ~48ms
-- Min pkt = ~7.5ms
-- Min Overhead 8 Bytes = ~6.7ms
--- Not including payload
--- For calculating packet transit times
+  - Time @ 1200bps/150Bps
+  - 1 bit = 0.833ms
+  - Max pkt = ~48ms
+  - Min pkt = ~7.5ms
+  - Min Overhead 8 Bytes = ~6.7ms
+    - Not including payload
+    - For calculating packet transit times
 
 Packets are variable in size
 - Add length byte (needed)
--- Assume length byte counts bytes
+  - Assume length byte counts bytes
 
 ------------------------
 
@@ -132,10 +132,10 @@ OGM
 - Advertisement of node existence
 - Send: [Pkt. Type][Node Add.][Node Type]
 - Send Intermittently
--- After receiving OGM an message
----- Only if no OGM sent for >5 mins
--- Max. Every 5 mins +/- random 30 secs + queue (adjust higher?)
--- Max pkt size = 5 bytes to advertise
+  - After receiving OGM an message
+    - Only if no OGM sent for >5 mins
+  - Max. Every 5 mins +/- random 30 secs + queue (adjust higher?)
+  - Max pkt size = 5 bytes to advertise
 Time (pkt+ovh)= 33.3ms + 6.7ms = ~40ms per node
 
 PING 
@@ -151,34 +151,30 @@ Data
 - Packet type is Data Request + Type
 - [Pkt. Type][Dest.][Src.][Data Size]
 - Data Types?
--- Short data
--- Long data
+  - Short data
+  - Long data
 
--- Max data size (255 pkts/12.4KBs/12.2sec.) and timeout (15 secs?)
+Max data size (255 pkts/12.4KBs/12.2sec.) and timeout (15 secs?)
 
 ------------------------
 
--- Need to approve data send requests
--- Should not tie up the spectrum unless systems are ready
+- Need to approve data send requests
+- Should not tie up the spectrum unless systems are ready
 
 Ack. Pkts. (Acknowledgment Packets)
 - Data Request TX/RX Response
--- Data TX (Ready to Send)
--- Data TX OK Standby (Medium busy)
+  - Data TX (Ready to Send)
+  - Data TX OK Standby (Medium busy)
 - Receiving system
--- Data RX OK (System Ready, Go!)
--- Data RX NOK Standby (System busy)
--- Data RX NOK (Reject)
+  - Data RX OK (System Ready, Go!)
+  - Data RX NOK Standby (System busy)
+  - Data RX NOK (Reject)
 
 - Data Received Verification
--- Verify with Pkt Seq#'s received
--- Req. Missing packet numbers
----- Dump Duplicates
--- Modem will verify CRCs for us
-
-
-
-
+  - Verify with Pkt Seq#'s received
+  - Req. Missing packet numbers
+    - Dump Duplicates
+  - Modem will verify CRCs for us
 
 
 ------------
